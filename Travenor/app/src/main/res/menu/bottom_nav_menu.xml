@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/home__1_"
+        android:title="home" />
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/calendar"
+        android:title="bookings" />
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/group_33"
+        android:title="search" />
+    <item
+        android:id="@+id/navigation_massad"
+        android:icon="@drawable/caht"
+        android:title="massadg" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/profile"
+        android:title="profile" />
+</menu>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.travenor.HomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.travenor.DashboardFragment"
+        android:label="bookings" />
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.travenor.SearchFragment"
+        android:label="search" />
+    <fragment
+        android:id="@+id/navigation_massad"
+        android:name="com.example.travenor.MessagesFragment"
+        android:label="massadg"/>
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.travenor.ProfileFragment"
+        android:label="Profile"/>
+
+</navigation>

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.travenor.Crypt;
 import com.example.travenor.Login;
 import com.example.travenor.MainActivity;
+import com.example.travenor.Models.DataBinding;
 import com.example.travenor.OnboardingActivity;
 import com.example.travenor.R;
 
@@ -25,6 +26,7 @@ public class SplashScreen extends AppCompatActivity{
         setContentView(R.layout.splash);
 
         Crypt crypt = new Crypt();
+
 
         SharedPreferences prefs = getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE);
 
@@ -49,5 +51,7 @@ public class SplashScreen extends AppCompatActivity{
                 finish();
             }
         }, 3000);
+
     }
+
 }

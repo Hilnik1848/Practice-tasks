@@ -6,4 +6,21 @@
     <string name="onboarding1">At Friends tours and travel, we customize reliable and trutworthy educational tours to destinations all over the world</string>
     <string name="onboarding2">To get the best of your adventure you just need to leave and go where you like. we are waiting for you</string>
     <string name="onboarding3">To get the best of your adventure you just need to leave and go where you like. we are waiting for you</string>
+    <string name="create_account">Sign up now</string>
+    <string name="sing_in_account">Sign in now</string>
+    <string name="full_name">Full Name</string>
+    <string name="pot">Please fill the details and create account</string>
+    <string name="hint_email">example@example.com</string>
+    <string name="email">Email</string>
+    <string name="login">login</string>
+    <string name="password">Password</string>
+    <string name="hint_pas">●●●●●●●●</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+    <string name="don_t_sign_up">Already have an account</string>
+    <string name="forgot_password"><font color='#FF6726'>Forget Password?</font></string>
+    <string name="reset_password">Reset password</string>
+    <string name="loremlong">Enter the password for recovery</string>
+    <string name="loremlong1">Enter your email account to reset  your password</string>
 </resources>

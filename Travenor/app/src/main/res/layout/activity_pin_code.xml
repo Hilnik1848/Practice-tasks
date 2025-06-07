@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="40dp">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Введите ПИН"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/pinInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pinEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:maxLength="6"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Подтвердить"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Выйти"
+        android:backgroundTint="#FF6B6B"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
