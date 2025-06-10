@@ -9,15 +9,7 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.travenor.Crypt;
-import com.example.travenor.Login;
-import com.example.travenor.MainActivity;
-import com.example.travenor.Models.DataBinding;
-import com.example.travenor.OnboardingActivity;
-import com.example.travenor.R;
-
-public class SplashScreen extends AppCompatActivity{
-
+public class SplashScreen extends AppCompatActivity {
     private final String MY_SETTINGS = "prefs";
 
     @Override
@@ -25,33 +17,24 @@ public class SplashScreen extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        Crypt crypt = new Crypt();
+        new Handler().postDelayed(() -> {
+            SessionManager sessionManager = new SessionManager(SplashScreen.this);
+            SharedPreferences prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
+            Intent intent;
 
-        SharedPreferences prefs = getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent= null;
-                if (prefs.getAll().isEmpty()){
-                    intent = new Intent(SplashScreen.this,
-                            OnboardingActivity.class);
-                }
-                else if(prefs.getAll().get("firstStart").equals("Login")) {
-                    intent = new Intent(SplashScreen.this,
-                            Login.class);
-                }
-                else if (prefs.getAll().get("firstStart").equals("Authorized")) {
-                    intent = new Intent(SplashScreen.this,
-                            MainActivity.class);
-                }
-
-                startActivity(intent);
-                finish();
+            if (!prefs.contains("firstStart")) {
+                intent = new Intent(SplashScreen.this, OnboardingActivity.class);
+            } else if (sessionManager.isPinSet() && sessionManager.canAutoLogin()) {
+                intent = new Intent(SplashScreen.this, PinCodeActivity.class);
+            } else if (sessionManager.isLoggedIn()) {
+                intent = new Intent(SplashScreen.this, MainActivity.class);
+            } else {
+                intent = new Intent(SplashScreen.this, Login.class);
             }
+
+            startActivity(intent);
+            finish();
         }, 3000);
-
     }
-
 }

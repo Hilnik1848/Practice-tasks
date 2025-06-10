@@ -4,16 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:id="@+id/pinContainer"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/pinTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm PIN"
-        android:textSize="30sp"
         android:textColor="@color/black"
+        android:text="Enter PIN"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:layout_marginBottom="32dp"/>
 
@@ -171,4 +170,5 @@
             android:layout_margin="10dp"
             style="@style/Widget.Material3.Button.TextButton"/>
     </GridLayout>
+
 </LinearLayout>

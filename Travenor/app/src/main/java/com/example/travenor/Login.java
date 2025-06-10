@@ -1,6 +1,8 @@
 package com.example.travenor;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -136,8 +138,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onResponse(String responseBody) {
                 runOnUiThread(() -> {
-                    Toast.makeText(Login.this, "Вход выполнен", Toast.LENGTH_SHORT).show();
-
                     Gson gson = new Gson();
                     AuthResponse auth = gson.fromJson(responseBody, AuthResponse.class);
 
@@ -146,7 +146,19 @@ public class Login extends AppCompatActivity {
                         return;
                     }
 
-                    startActivity(new Intent(Login.this, MainActivity.class));
+                    SessionManager sessionManager = new SessionManager(Login.this);
+                    sessionManager.createLoginSession(
+                            email,
+                            password,
+                            auth.getAccess_token(),
+                            auth.getUser().getId()
+                    );
+
+                    if (sessionManager.isPinSet()) {
+                        startActivity(new Intent(Login.this, PinCodeActivity.class));
+                    } else {
+                        startActivity(new Intent(Login.this, SetPinActivity.class));
+                    }
                     finish();
                 });
             }
