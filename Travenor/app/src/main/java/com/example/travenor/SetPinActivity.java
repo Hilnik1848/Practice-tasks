@@ -1,6 +1,5 @@
 package com.example.travenor;
 
-// SetPinActivity.java
 
 import android.content.Intent;
 import android.os.Bundle;

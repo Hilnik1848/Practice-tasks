@@ -44,6 +44,7 @@ public class Login extends AppCompatActivity {
         setupTextWatchers();
         setupLoginButton();
         setupSignUpRedirect();
+        setupForgotPasswordRedirect();
     }
 
     private void initViews() {
@@ -69,6 +70,8 @@ public class Login extends AppCompatActivity {
             }
         });
 
+
+
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -80,6 +83,12 @@ public class Login extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 validatePassword();
             }
+        });
+    }
+
+    private void setupForgotPasswordRedirect() {
+        findViewById(R.id.forgot_pas).setOnClickListener(v -> {
+            startActivity(new Intent(Login.this, ForgotPasswordActivity.class));
         });
     }
 

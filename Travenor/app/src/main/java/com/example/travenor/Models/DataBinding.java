@@ -32,4 +32,8 @@ public class DataBinding {
         if (!isInitialized || sharedPreferences == null) return null;
         return sharedPreferences.getString("user_uuid", null);
     }
+    public static String getAccessToken() {
+        if (!isInitialized || sharedPreferences == null) return null;
+        return sharedPreferences.getString("access_token", null);
+    }
 }
