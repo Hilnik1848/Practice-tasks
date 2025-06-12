@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/arrow"
+            android:src="@drawable/edit"
             android:padding="16dp"
             android:contentDescription="@string/email"
             app:layout_constraintTop_toTopOf="parent"

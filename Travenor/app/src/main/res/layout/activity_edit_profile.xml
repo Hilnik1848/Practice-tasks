@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_profile_placeholder"
+            android:scaleType="centerCrop"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Выберите аватар" />
+
+        <Button
+            android:id="@+id/changePhotoBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Изменить фото"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            style="@style/Widget.Material3.Button.TextButton"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Имя"
+            android:layout_marginTop="24dp"/>
+
+        <EditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Имя"
+            android:textSize="24sp"
+            android:maxLines="1"
+            android:background="@android:color/transparent"
+            android:inputType="textPersonName"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Пароль"
+            android:layout_marginTop="24dp"/>
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Пароль"
+            android:textSize="24sp"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:layout_marginTop="24dp"/>
+
+        <EditText
+            android:id="@+id/currentEmailText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:textSize="24sp"
+            android:background="@android:color/transparent"/>
+
+        <Button
+            android:id="@+id/saveChangesBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сохранить изменения"
+            android:layout_marginTop="32dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            style="@style/Widget.Material3.Button.TextButton"/>
+    </LinearLayout>

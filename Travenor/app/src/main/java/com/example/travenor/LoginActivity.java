@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout nameLayout, emailLayout, passwordLayout, confirmPasswordLayout;
     TextInputEditText nameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
     Button signUpButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,7 +203,11 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         sharedPref.edit().putString("auth_status", "Authorized").apply();
 
-        startActivity(new Intent(LoginActivity.this, SetPinActivity.class));
+        if (!sessionManager.isPinSet()) {
+            startActivity(new Intent(LoginActivity.this, SetPinActivity.class));
+        } else {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
         finish();
     }
 

@@ -22,6 +22,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBinding.init(getApplicationContext());
         setContentView(R.layout.set_password);
 
         DataBinding.init(this);
@@ -54,49 +55,24 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 return;
             }
 
-            supabaseClient.verifyOtp(email, token, new SupabaseClient.SBC_Callback() {
+            supabaseClient.updatePassword(password, new SupabaseClient.SBC_Callback() {
                 @Override
                 public void onFailure(IOException e) {
-                    runOnUiThread(() -> {
-                        if (e.getMessage().contains("OTP истёк")) {
-                            navigateToOtpScreen("Код истёк. Запросите новый.", email);
-                        } else {
-                            Toast.makeText(ResetPasswordActivity.this,
-                                    "Ошибка подтверждения: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    runOnUiThread(() ->
+                            Toast.makeText(ResetPasswordActivity.this, "Ошибка изменения пароля: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                    );
                 }
 
                 @Override
-                public void onResponse(String accessToken) {
+                public void onResponse(String responseBody) {
                     runOnUiThread(() -> {
-                        supabaseClient.updatePassword(password, new SupabaseClient.SBC_Callback() {
-                            @Override
-                            public void onFailure(IOException e) {
-                                runOnUiThread(() ->
-                                        Toast.makeText(ResetPasswordActivity.this,
-                                                "Ошибка изменения пароля: " + e.getMessage(),
-                                                Toast.LENGTH_LONG).show()
-                                );
-                            }
-
-                            @Override
-                            public void onResponse(String responseBody) {
-                                runOnUiThread(() -> {
-                                    Toast.makeText(ResetPasswordActivity.this,
-                                            "Пароль успешно изменён",
-                                            Toast.LENGTH_SHORT).show();
-                                    navigateToLoginScreen();
-                                });
-                            }
-                        });
+                        Toast.makeText(ResetPasswordActivity.this, "Пароль успешно изменён", Toast.LENGTH_SHORT).show();
+                        navigateToLoginScreen();
                     });
                 }
             });
         });
     }
-
 
     private boolean validatePasswords(String password, String confirmPassword) {
         if (password.isEmpty() || confirmPassword.isEmpty()) {
@@ -126,8 +102,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     private void navigateToLoginScreen() {
-        Toast.makeText(this, "Пароль изменён", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, LoginActivity.class);
+        Toast.makeText(this, "Пароль успешно изменён", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, Login.class);
         startActivity(intent);
         finish();
     }

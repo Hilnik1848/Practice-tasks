@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.travenor.Models.DataBinding;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 public class OnboardingActivity extends AppCompatActivity {
@@ -21,6 +22,8 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBinding.init(getApplicationContext());
+
         setContentView(R.layout.activity_onbording);
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);

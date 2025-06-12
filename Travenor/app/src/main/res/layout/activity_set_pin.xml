@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
 
+    <!-- Кнопка "Назад" -->
+    <ImageButton
+        android:id="@+id/forgotBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow"
+        android:background="@color/white"
+        android:contentDescription="Назад"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Заголовок -->
     <TextView
         android:id="@+id/pinTitle"
         android:layout_width="wrap_content"
@@ -14,23 +29,48 @@
         android:text="Enter PIN"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginBottom="32dp"/>
+        app:layout_constraintTop_toBottomOf="@id/forgotBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
+    <!-- Описание -->
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter the PIN code to log in to the app"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/pinTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="11dp"/>
+
+    <!-- Отображение пин-кода -->
     <TextView
         android:id="@+id/pinDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="••••"
         android:textSize="50sp"
-        android:layout_marginBottom="64dp"/>
+        app:layout_constraintTop_toBottomOf="@id/Title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
 
+    <!-- Клавиатура -->
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="3"
         android:rowCount="4"
         android:columnOrderPreserved="true"
-        android:layout_gravity="center">
+        app:layout_constraintTop_toBottomOf="@id/pinDisplay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="64dp">
 
         <Button
             android:id="@+id/btn1"
@@ -140,11 +180,12 @@
             android:layout_margin="10dp"
             style="@style/Widget.Material3.Button.TextButton"/>
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:layout_width="1dp"
+            android:layout_height="1dp"
             android:layout_column="0"
-            android:layout_row="3"/>
+            android:layout_row="3"
+            android:layout_margin="10dp"/>
 
         <Button
             android:id="@+id/btn0"
@@ -169,6 +210,7 @@
             android:layout_row="3"
             android:layout_margin="10dp"
             style="@style/Widget.Material3.Button.TextButton"/>
+
     </GridLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

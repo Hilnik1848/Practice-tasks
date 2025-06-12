@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import com.bumptech.glide.Glide;
+import com.example.travenor.Models.DataBinding;
+
 public class SessionManager {
 
     private static final String PREF_NAME = "user_session";
@@ -12,6 +15,7 @@ public class SessionManager {
     private static final String KEY_BEARER_TOKEN = "bearer_token";
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_PIN = "pin";
+    private static final String KEY_FULL_NAME = "full_name";
 
     private SharedPreferences sharedPreferences;
 
@@ -32,6 +36,13 @@ public class SessionManager {
         }
     }
 
+    public void updateProfile(String email, String fullName) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_FULL_NAME, fullName);
+        editor.apply();
+    }
+
 
 
     public String getEmail() {
@@ -39,17 +50,28 @@ public class SessionManager {
     }
 
     public String getPassword() {
-        String encrypted = sharedPreferences.getString(KEY_PASSWORD, null);
-        if (encrypted != null) {
+        String encryptedPass = sharedPreferences.getString(KEY_PASSWORD, null);
+        if (encryptedPass != null && !encryptedPass.isEmpty()) {
             try {
-                return Crypt.decrypt(encrypted);
+                return Crypt.decrypt(encryptedPass);
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
         }
         return null;
     }
 
+
+    public String getFullName() {
+        return sharedPreferences.getString(KEY_FULL_NAME, null);
+    }
+
+    public void saveFullName(String fullName) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_FULL_NAME, fullName);
+        editor.apply();
+    }
     public String getBearerToken() {
         return sharedPreferences.getString(KEY_BEARER_TOKEN, null);
     }
@@ -67,7 +89,26 @@ public class SessionManager {
         editor.remove(KEY_PIN);
         editor.apply();
     }
+    public void savePassword(String password) {
+        try {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(KEY_PASSWORD, Crypt.encrypt(password));
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+
+    public void saveEmail(String email) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_EMAIL, email);
+        editor.apply();
+    }
+
+    public boolean isPasswordSet() {
+        return sharedPreferences.contains(KEY_PASSWORD);
+    }
 
     public void savePin(String pin) {
         String encodedPin = Base64.encodeToString(pin.getBytes(), Base64.DEFAULT);

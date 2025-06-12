@@ -15,6 +15,16 @@
         android:textSize="30sp"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:layout_marginBottom="11dp"/>
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You will need a PIN code to log in to the app. PIN"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
         android:layout_marginBottom="32dp"/>
 
     <TextView

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -42,11 +43,17 @@
 
         <activity android:name=".LoginActivity"
             android:exported="true" />
+
         <activity android:name=".ForgotPasswordActivity"
             android:exported="true"/>
+
         <activity android:name=".OtpScreen"
             android:exported="true"/>
+
         <activity android:name=".ResetPasswordActivity"
+            android:exported="true"/>
+
+        <activity android:name=".EditProfileActivity"
             android:exported="true"/>
     </application>
 

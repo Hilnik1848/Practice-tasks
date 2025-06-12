@@ -26,6 +26,7 @@ public class PinCodeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBinding.init(getApplicationContext());
         setContentView(R.layout.activity_pin_code);
 
         pinDisplay = findViewById(R.id.pinDisplay);
