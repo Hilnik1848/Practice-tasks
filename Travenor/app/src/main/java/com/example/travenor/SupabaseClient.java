@@ -458,6 +458,213 @@ public class SupabaseClient {
         });
     }
 
+    public void fetchHotels(final SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "Hotels?select=*";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    callback.onResponse(responseBody);
+                } else {
+                    callback.onFailure(new IOException("Failed to fetch hotels"));
+                }
+            }
+        });
+    }
+
+    public void fetchHotelDetails(String hotelId, final SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "Hotels?id=eq." + hotelId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    callback.onResponse(responseBody);
+                } else {
+                    callback.onFailure(new IOException("Failed to fetch hotel details"));
+                }
+            }
+        });
+    }
+
+    public void checkFavorite(String userId, String hotelId, final FavoriteCallback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId + "&hotel_id=eq." + hotelId;
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    boolean exists = !body.equals("[]");
+                    callback.onResult(exists);
+                } else {
+                    callback.onError(new IOException("Ошибка проверки избранного"));
+                }
+            }
+        });
+    }
+
+    public void addFavorite(String userId, String hotelId, final SimpleCallback callback) {
+        String json = "{ \"user_id\": \"" + userId + "\", \"hotel_id\": \"" + hotelId + "\" }";
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        RequestBody body = RequestBody.create(JSON, json);
+
+        String url = DOMAIN_NAME + REST_PATH + "favorites";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .addHeader("Prefer", "return=minimal")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onError(new IOException("Не удалось добавить в избранное"));
+                }
+            }
+        });
+    }
+
+    public void removeFavorite(String userId, String hotelId, final SimpleCallback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId + "&hotel_id=eq." + hotelId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .addHeader("Prefer", "return=minimal")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onError(new IOException("Не удалось удалить из избранного"));
+                }
+            }
+        });
+    }
+
+    public void fetchFavoritesForUser(String userId, SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId;
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Не удалось загрузить избранное"));
+                }
+            }
+        });
+    }
+
+    public void fetchHotelById(String hotelId, SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "Hotels?id=eq." + hotelId;
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Не удалось загрузить отель"));
+                }
+            }
+        });
+    }
+
+
+    public interface FavoriteCallback {
+        void onResult(boolean isFavorite);
+        void onError(Exception e);
+    }
+
+    public interface SimpleCallback {
+        void onSuccess();
+        void onError(Exception e);
+    }
     public interface SBC_Callback {
         void onFailure(IOException e);
         void onResponse(String responseBody);

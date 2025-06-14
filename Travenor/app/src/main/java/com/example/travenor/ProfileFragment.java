@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.travenor.Models.DataBinding;
 import com.example.travenor.Models.ProfileResponse;
 import com.google.gson.Gson;
@@ -106,6 +107,8 @@ public class ProfileFragment extends Fragment {
                                         .load(avatarUrl)
                                         .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                                         .error(android.R.drawable.ic_menu_report_image)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
                                         .into(profileImage);
                             }
                         } else {

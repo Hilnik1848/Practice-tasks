@@ -29,7 +29,6 @@ public class RealPathUtil {
         }
     }
 
-    // Для Android 10+ (API 29+)
     private static String getFilePathFromUri(Context context, Uri uri) {
         try {
             ContentResolver resolver = context.getContentResolver();

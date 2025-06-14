@@ -17,6 +17,7 @@ import com.example.travenor.Models.DataBinding;
 import com.example.travenor.Models.ProfileUpdate;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -89,10 +90,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (!isNameChanged && !isEmailChanged && !isPasswordChanged && selectedImageUri == null) {
             Toast.makeText(this, "Нет изменений", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
         SupabaseClient supabaseClient = new SupabaseClient();
+        AtomicInteger completedUpdates = new AtomicInteger(0);
+        int totalUpdates = 0;
+
+        if (isNameChanged) totalUpdates++;
+        if (isEmailChanged) totalUpdates++;
+        if (isPasswordChanged) totalUpdates++;
+        if (selectedImageUri != null) totalUpdates++;
+
+        int finalTotalUpdates = totalUpdates;
+        Runnable onTaskComplete = () -> {
+            if (completedUpdates.incrementAndGet() == finalTotalUpdates) {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Данные успешно обновлены", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                });
+            }
+        };
 
         if (isNameChanged) {
             sessionManager.saveFullName(newName);
@@ -102,6 +122,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                             Toast.makeText(EditProfileActivity.this, "Ошибка обновления имени", Toast.LENGTH_SHORT).show()
                     );
+                    onTaskComplete.run();
                 }
 
                 @Override
@@ -109,6 +130,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                             Toast.makeText(EditProfileActivity.this, "Имя обновлено на сервере", Toast.LENGTH_SHORT).show()
                     );
+                    onTaskComplete.run();
                 }
             });
         }
@@ -120,6 +142,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                             Toast.makeText(EditProfileActivity.this, "Ошибка смены email", Toast.LENGTH_SHORT).show()
                     );
+                    onTaskComplete.run();
                 }
 
                 @Override
@@ -128,6 +151,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         sessionManager.saveEmail(newEmail);
                         Toast.makeText(EditProfileActivity.this, "Email обновлён", Toast.LENGTH_SHORT).show();
                     });
+                    onTaskComplete.run();
                 }
             });
         }
@@ -139,6 +163,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                             Toast.makeText(EditProfileActivity.this, "Ошибка смены пароля", Toast.LENGTH_SHORT).show()
                     );
+                    onTaskComplete.run();
                 }
 
                 @Override
@@ -147,6 +172,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         sessionManager.savePassword(newPassword);
                         Toast.makeText(EditProfileActivity.this, "Пароль изменён", Toast.LENGTH_SHORT).show();
                     });
+                    onTaskComplete.run();
                 }
             });
         }
@@ -160,6 +186,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                             Toast.makeText(EditProfileActivity.this, "Ошибка загрузки фото: " + e.getMessage(), Toast.LENGTH_LONG).show()
                     );
+                    onTaskComplete.run();
                 }
 
                 @Override
@@ -175,17 +202,22 @@ public class EditProfileActivity extends AppCompatActivity {
                             public void onFailure(IOException e) {
                                 Log.e("AvatarUpdate", "Ошибка обновления ссылки на фото", e);
                                 Toast.makeText(EditProfileActivity.this, "Не удалось обновить ссылку на фото", Toast.LENGTH_SHORT).show();
+                                onTaskComplete.run();
                             }
 
                             @Override
                             public void onResponse(String responseBody) {
-                                Toast.makeText(EditProfileActivity.this, "Ссылка на фото обновлена", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(() ->
+                                        Toast.makeText(EditProfileActivity.this, "Ссылка на фото обновлена", Toast.LENGTH_SHORT).show()
+                                );
+                                onTaskComplete.run();
                             }
                         });
                     });
                 }
             }, EditProfileActivity.this);
         } else {
-            Toast.makeText(this, "Данные успешно обновлены", Toast.LENGTH_SHORT).show();
-        }}
+            onTaskComplete.run();
+        }
+    }
 }
