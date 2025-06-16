@@ -3,6 +3,8 @@ package com.example.travenor;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -514,6 +516,25 @@ public class SupabaseClient {
         });
     }
 
+    public void toggleFavorite(String userId, String hotelId, SimpleCallback callback) {
+        checkFavorite(userId, hotelId, new FavoriteCallback() {
+            @Override
+            public void onResult(boolean isFavorite) {
+                if (isFavorite) {
+                    removeFavorite(userId, hotelId, callback);
+                } else {
+                    addFavorite(userId, hotelId, callback);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+
     public void checkFavorite(String userId, String hotelId, final FavoriteCallback callback) {
         String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId + "&hotel_id=eq." + hotelId;
         Request request = new Request.Builder()
@@ -575,7 +596,7 @@ public class SupabaseClient {
         });
     }
 
-    public void removeFavorite(String userId, String hotelId, final SimpleCallback callback) {
+    public void removeFavorite(String userId, String hotelId, SimpleCallback callback) {
         String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId + "&hotel_id=eq." + hotelId;
 
         Request request = new Request.Builder()
@@ -589,22 +610,29 @@ public class SupabaseClient {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                callback.onError(e);
+                new Handler(Looper.getMainLooper()).post(() ->
+                        callback.onError(e)
+                );
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    callback.onSuccess();
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.code() == 204) {
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            callback.onSuccess()
+                    );
                 } else {
-                    callback.onError(new IOException("Не удалось удалить из избранного"));
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            callback.onError(new IOException("Не удалось удалить"))
+                    );
                 }
             }
         });
     }
 
     public void fetchFavoritesForUser(String userId, SBC_Callback callback) {
-        String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId;
+        String url = DOMAIN_NAME + REST_PATH + "favorites?user_id=eq." + userId + "&select=*,Hotels(*)";
+
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -654,6 +682,8 @@ public class SupabaseClient {
             }
         });
     }
+
+
 
 
     public interface FavoriteCallback {

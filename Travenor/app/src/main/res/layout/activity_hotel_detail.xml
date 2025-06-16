@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="400dp">
 
         <ImageView
             android:id="@+id/hotel_detail_image"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/img1"/>
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/arrow"
+            android:contentDescription="Назад" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,9 +60,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:isIndicator="true"
                 android:numStars="5"
-                android:stepSize="0.5"/>
+                android:progressTint="#FFD700"
+                android:progressBackgroundTint="#959595"
+                android:stepSize="0.5"
+                android:isIndicator="true"/>
 
             <TextView
                 android:id="@+id/hotel_detail_price"
@@ -63,6 +81,18 @@
                 android:layout_marginTop="16dp"
                 android:textSize="16sp"
                 android:lineSpacingMultiplier="1.2"/>
+
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_book_hotel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Забронировать"
+        android:textAllCaps="false"
+        android:layout_margin="16dp"
+        android:backgroundTint="#03DAC5"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>

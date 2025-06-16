@@ -20,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.travenor.HotelsAdapter;
 import com.example.travenor.Models.DataBinding;
 import com.example.travenor.Models.Hotel;
 import com.example.travenor.Models.ProfileResponse;
@@ -185,6 +184,6 @@ public class HomeFragment extends Fragment implements HotelsAdapter.OnHotelClick
     }
 
     private void showContextMenu(Hotel hotel) {
-        Toast.makeText(getContext(), "Долгое нажатие на отель: " + hotel.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Отель: " + hotel.getName(), Toast.LENGTH_SHORT).show();
     }
 }

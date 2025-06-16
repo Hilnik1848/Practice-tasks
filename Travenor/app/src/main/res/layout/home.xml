@@ -26,10 +26,10 @@
 
             <ImageButton
                 android:id="@+id/favorite_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_gravity="top|end"
-                android:layout_margin="16dp"
+                android:layout_margin="30dp"
                 android:background="@drawable/like"
                 android:padding="18dp"/>
         </FrameLayout>
@@ -67,6 +67,8 @@
                     android:layout_height="wrap_content"
                     android:isIndicator="true"
                     android:numStars="5"
+                    android:progressBackgroundTint="#959595"
+                    android:progressTint="#FFD700"
                     android:stepSize="0.5"/>
             </LinearLayout>
         </LinearLayout>

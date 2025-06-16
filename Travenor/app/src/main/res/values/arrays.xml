@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countries_array">
+        <item>Выберите страну</item>
+        <item>Россия</item>
+        <item>Германия</item>
+        <item>Франция</item>
+        <item>Италия</item>
+        <item>Испания</item>
+        <item>США</item>
+        <item>Великобритания</item>
+        <item>Турция</item>
+        <item>ОАЭ</item>
+    </string-array>
+</resources>

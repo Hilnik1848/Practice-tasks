@@ -1,7 +1,8 @@
 package com.example.travenor;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
 import com.example.travenor.Models.DataBinding;
 import com.example.travenor.Models.Hotel;
 
@@ -39,20 +39,27 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         this.supabaseClient = new SupabaseClient();
     }
 
+    public void updateHotels(List<Hotel> newHotels) {
+        if (newHotels == null) return;
+        hotels.clear();
+        hotels.addAll(newHotels);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_favorite_places, parent, false);
+                .inflate(R.layout.item_favorite_hotel, parent, false);
         return new FavoriteViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavoriteViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull FavoriteViewHolder holder, int position) {
         Hotel hotel = hotels.get(position);
 
         holder.hotelName.setText(hotel.getName());
-        holder.hotelLocation.setText(hotel.getLocation());
+        holder.hotelLocation.setText(hotel.getAddres());
         holder.hotelRating.setRating((float) hotel.getRating());
 
         String imageUrl = hotel.getImageUrl();
@@ -71,29 +78,33 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
                 HotelDetailActivity.start(context, hotel.getId())
         );
 
-        holder.favoriteButton.setImageResource(R.drawable.like);
-
         holder.favoriteButton.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+
+            if (pos == RecyclerView.NO_POSITION) return;
+
             String userId = DataBinding.getUuidUser();
             if (userId == null || userId.isEmpty()) {
                 Toast.makeText(context, "Вы не авторизованы", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            supabaseClient.removeFavorite(userId, hotel.getId(),
-                    new SupabaseClient.SimpleCallback() {
-                        @Override
-                        public void onSuccess() {
-                            hotels.remove(position);
-                            notifyItemRemoved(position);
-                            Toast.makeText(context, "Удалено из избранного", Toast.LENGTH_SHORT).show();
-                        }
+            supabaseClient.removeFavorite(userId, hotel.getId(), new SupabaseClient.SimpleCallback() {
+                @Override
+                public void onSuccess() {
+                    int pos = holder.getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        hotels.remove(pos);
+                        notifyItemRemoved(pos);
+                        Toast.makeText(context, "Удалено из избранного", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-                        @Override
-                        public void onError(Exception e) {
-                            Toast.makeText(context, "Ошибка удаления", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                @Override
+                public void onError(Exception e) {
+                    Toast.makeText(context, "Ошибка удаления", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
@@ -102,7 +113,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
         return hotels.size();
     }
 
-    static class FavoriteViewHolder extends RecyclerView.ViewHolder {
+    public static class FavoriteViewHolder extends RecyclerView.ViewHolder {
         ImageView hotelImage;
         TextView hotelName;
         TextView hotelLocation;

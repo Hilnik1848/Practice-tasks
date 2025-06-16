@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:text="Фильтр"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/input_country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:padding="5dp"
+        android:background="@drawable/edittext_border"
+        android:hint="Страна"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Star Rating"
+        android:textSize="18sp"
+        android:layout_marginTop="15dp" />
+
+    <RatingBar
+        android:progressBackgroundTint="#94D9D9D9"
+        android:progressTint="#FFD700"
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:rating="0"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Faciities"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp" />
+
+
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/input_amenities"
+        android:layout_width="match_parent"
+        android:textSize="30dp"
+        android:padding="5dp"
+        android:background="@drawable/edittext_border"
+        android:layout_height="wrap_content"
+        android:hint="Удобства (через запятую)"
+        android:inputType="text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_apply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Применить"
+            android:backgroundTint="@color/blue"
+            android:layout_marginEnd="4dp"
+            android:textColor="@color/white"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+        <Button
+            android:id="@+id/btn_reset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Сбросить"
+            android:layout_marginEnd="4dp"
+            android:textColor="@color/org"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -12,13 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.travenor.Models.Hotel;
-import com.example.travenor.Models.DataBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HotelDetailActivity extends AppCompatActivity {
@@ -28,13 +26,11 @@ public class HotelDetailActivity extends AppCompatActivity {
     private TextView hotelName;
     private TextView hotelLocation;
     private TextView hotelDescription;
-    private TextView hotelPrice;
     private RatingBar hotelRating;
 
     public static void start(Context context, String hotelId) {
-        Intent intent = new Intent(context, HotelDetailActivity.class);
-        intent.putExtra(EXTRA_HOTEL_ID, hotelId);
-        context.startActivity(intent);
+        context.startActivity(new Intent(context, HotelDetailActivity.class)
+                .putExtra(EXTRA_HOTEL_ID, hotelId));
     }
 
     @Override
@@ -51,7 +47,6 @@ public class HotelDetailActivity extends AppCompatActivity {
         hotelName = findViewById(R.id.hotel_detail_name);
         hotelLocation = findViewById(R.id.hotel_detail_location);
         hotelDescription = findViewById(R.id.hotel_detail_description);
-        hotelPrice = findViewById(R.id.hotel_detail_price);
         hotelRating = findViewById(R.id.hotel_detail_rating);
     }
 
@@ -67,16 +62,16 @@ public class HotelDetailActivity extends AppCompatActivity {
         supabaseClient.fetchHotelDetails(hotelId, new SupabaseClient.SBC_Callback() {
             @Override
             public void onFailure(IOException e) {
-                runOnUiThread(() -> {
-                    Toast.makeText(HotelDetailActivity.this, "Ошибка загрузки данных отеля", Toast.LENGTH_SHORT).show();
-                });
+                runOnUiThread(() ->
+                        Toast.makeText(HotelDetailActivity.this, "Ошибка загрузки данных отеля", Toast.LENGTH_SHORT).show()
+                );
             }
 
             @Override
             public void onResponse(String responseBody) {
                 runOnUiThread(() -> {
                     try {
-                        Type listType = new TypeToken<ArrayList<Hotel>>(){}.getType();
+                        Type listType = new TypeToken<List<Hotel>>(){}.getType();
                         List<Hotel> hotels = new Gson().fromJson(responseBody, listType);
 
                         if (hotels != null && !hotels.isEmpty()) {
@@ -94,14 +89,14 @@ public class HotelDetailActivity extends AppCompatActivity {
 
     private void displayHotelDetails(Hotel hotel) {
         hotelName.setText(hotel.getName());
-        hotelLocation.setText(hotel.getLocation());
+        hotelLocation.setText(hotel.getAddres());
         hotelDescription.setText(hotel.getDescription());
         hotelRating.setRating((float) hotel.getRating());
 
         if (hotel.getImageUrl() != null && !hotel.getImageUrl().isEmpty()) {
             String imageUrl = hotel.getImageUrl();
             if (!imageUrl.startsWith("http")) {
-                imageUrl = "https://mmbdesfnabtcbpjwcwde.supabase.co/storage/v1/object/public/hotel/" + imageUrl;
+                imageUrl = "https://mmbdesfnabtcbpjwcwde.supabase.co/storage/v1/object/public/hotel/"  + imageUrl;
             }
 
             Glide.with(this)

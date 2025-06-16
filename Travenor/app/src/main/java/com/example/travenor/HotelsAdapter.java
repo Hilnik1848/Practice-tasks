@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.travenor.Models.DataBinding;
 import com.example.travenor.Models.Hotel;
-import com.example.travenor.R;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class HotelsAdapter extends RecyclerView.Adapter<HotelsAdapter.HotelViewH
         Hotel hotel = hotels.get(position);
 
         holder.hotelName.setText(hotel.getName());
-        holder.hotelLocation.setText(hotel.getLocation());
+        holder.hotelLocation.setText(hotel.getAddres());
         holder.hotelRating.setRating((float) hotel.getRating());
 
         SupabaseClient supabaseClient = new SupabaseClient();

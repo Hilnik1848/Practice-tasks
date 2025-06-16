@@ -9,6 +9,7 @@
     android:layout_margin="8dp">
 
     <LinearLayout
+        android:padding="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -64,9 +65,9 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="0.5"
-            android:isIndicator="true"
             android:progressBackgroundTint="#959595"
             android:progressTint="#FFD700"
+            android:isIndicator="true"
             android:layout_marginTop="4dp"
             android:layout_marginStart="16dp"/>
 
