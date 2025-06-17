@@ -92,7 +92,8 @@
         android:text="Забронировать"
         android:textAllCaps="false"
         android:layout_margin="16dp"
-        android:backgroundTint="#03DAC5"
+        android:backgroundTint="@color/blue"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:textColor="#FFFFFF"/>
 
 </LinearLayout>

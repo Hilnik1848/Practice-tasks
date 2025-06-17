@@ -32,6 +32,9 @@
         <activity android:name=".OnboardingActivity"
             android:exported="true"/>
 
+
+        <activity android:name=".BookingFormActivity"
+            android:exported="true"/>
         <activity android:name=".HotelDetailActivity"
             android:exported="true"/>
 

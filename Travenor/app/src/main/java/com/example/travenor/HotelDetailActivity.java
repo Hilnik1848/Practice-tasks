@@ -3,6 +3,8 @@ package com.example.travenor;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -26,7 +28,11 @@ public class HotelDetailActivity extends AppCompatActivity {
     private TextView hotelName;
     private TextView hotelLocation;
     private TextView hotelDescription;
+    private TextView hotelPrice;
     private RatingBar hotelRating;
+    private ImageButton btnBack;
+    private Button btnBookHotel;
+    private Hotel currentHotel;
 
     public static void start(Context context, String hotelId) {
         context.startActivity(new Intent(context, HotelDetailActivity.class)
@@ -47,7 +53,23 @@ public class HotelDetailActivity extends AppCompatActivity {
         hotelName = findViewById(R.id.hotel_detail_name);
         hotelLocation = findViewById(R.id.hotel_detail_location);
         hotelDescription = findViewById(R.id.hotel_detail_description);
+        hotelPrice = findViewById(R.id.hotel_detail_price);
         hotelRating = findViewById(R.id.hotel_detail_rating);
+        btnBack = findViewById(R.id.btn_back);
+        btnBookHotel = findViewById(R.id.btn_book_hotel);
+
+        btnBack.setOnClickListener(v -> finish());
+
+        btnBookHotel.setOnClickListener(v -> {
+            if (currentHotel != null) {
+                Intent intent = new Intent(HotelDetailActivity.this, BookingFormActivity.class);
+                intent.putExtra("hotel_id", currentHotel.getId());
+                intent.putExtra("hotel_name", currentHotel.getName());
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Информация об отеле еще не загружена", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadHotelDetails() {
@@ -75,7 +97,8 @@ public class HotelDetailActivity extends AppCompatActivity {
                         List<Hotel> hotels = new Gson().fromJson(responseBody, listType);
 
                         if (hotels != null && !hotels.isEmpty()) {
-                            displayHotelDetails(hotels.get(0));
+                            currentHotel = hotels.get(0);
+                            displayHotelDetails(currentHotel);
                         } else {
                             Toast.makeText(HotelDetailActivity.this, "Отель не найден", Toast.LENGTH_SHORT).show();
                         }
@@ -92,11 +115,10 @@ public class HotelDetailActivity extends AppCompatActivity {
         hotelLocation.setText(hotel.getAddres());
         hotelDescription.setText(hotel.getDescription());
         hotelRating.setRating((float) hotel.getRating());
-
         if (hotel.getImageUrl() != null && !hotel.getImageUrl().isEmpty()) {
             String imageUrl = hotel.getImageUrl();
             if (!imageUrl.startsWith("http")) {
-                imageUrl = "https://mmbdesfnabtcbpjwcwde.supabase.co/storage/v1/object/public/hotel/"  + imageUrl;
+                imageUrl = "https://mmbdesfnabtcbpjwcwde.supabase.co/storage/v1/object/public/hotel/" + imageUrl;
             }
 
             Glide.with(this)
