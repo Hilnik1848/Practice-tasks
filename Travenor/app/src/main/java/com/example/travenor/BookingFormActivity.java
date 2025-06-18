@@ -189,7 +189,15 @@ public class BookingFormActivity extends AppCompatActivity {
             return;
         }
 
+        long diff = endDateMillis - startDateMillis;
+        int days = (int) TimeUnit.MILLISECONDS.toDays(diff);
+        if (days <= 0) {
+            Toast.makeText(this, "Некорректные даты", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         HotelRoom selectedRoom = roomList.get(roomTypeSpinner.getSelectedItemPosition());
+        double totalSum = selectedRoom.getPrice_per_night() * days * guestCount;
 
         BookingRequest booking = new BookingRequest(
                 userId,
@@ -199,6 +207,7 @@ public class BookingFormActivity extends AppCompatActivity {
                 selectedRoom.getId(),
                 Integer.parseInt(hotelId)
         );
+        booking.setSumm(totalSum);
 
         sendBookingRequest(booking);
     }

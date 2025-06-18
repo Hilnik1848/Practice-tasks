@@ -46,7 +46,6 @@
         app:layout_constraintTop_toBottomOf="@id/selectDateLabel"
         app:layout_constraintLeft_toLeftOf="parent"
         android:background="@color/l_blue"
-        android:selectedWeekBackgroundColor="#FF4081"
         />
 
     <TableLayout

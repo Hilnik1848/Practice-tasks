@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.Material3.Light">
-        <!-- Цвет незаполненных звезд -->
-        <item name="colorControlNormal">#E0E0E0</item>
-        <!-- Цвет заполненных звезд -->
-        <item name="colorControlActivated">#FFC107</item>
-    </style>
+
 </resources>

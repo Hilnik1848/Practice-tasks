@@ -81,4 +81,6 @@ public class Hotel implements Parcelable {
         dest.writeDouble(rating);
         dest.writeString(imageUrl);
     }
+
+
 }

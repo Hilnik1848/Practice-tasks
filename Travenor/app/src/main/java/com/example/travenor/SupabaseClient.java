@@ -5,20 +5,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 
+import com.example.travenor.Models.ScheduleItem;
 import com.example.travenor.Models.DataBinding;
 import com.example.travenor.Models.LoginRequest;
 import com.example.travenor.Models.ProfileUpdate;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -684,7 +687,30 @@ public class SupabaseClient {
     }
 
 
+    public void fetchBookingsForUser(String userId, SBC_Callback callback) {
+        Request request = new Request.Builder()
+                .url(DOMAIN_NAME + "/rest/v1/bookings?select=*,hotel_room(*,Hotels(*))&user_id=eq." + userId)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
 
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Ошибка получения бронирования"));
+                }
+            }
+        });
+    }
 
     public interface FavoriteCallback {
         void onResult(boolean isFavorite);

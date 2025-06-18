@@ -45,7 +45,6 @@
         android:id="@+id/favoritePlacesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:listitem="@layout/item_favorite_hotel"

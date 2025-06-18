@@ -207,16 +207,4 @@ e
                 android:text="$"/>
         </TableRow>
     </TableLayout>
-
-    <Button
-        android:id="@+id/btnContinue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm payment"
-        android:layout_gravity="end"
-        android:layout_marginTop="24dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:backgroundTint="@color/blue"
-        android:textColor="@color/white"/>
-
 </LinearLayout>

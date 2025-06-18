@@ -16,8 +16,9 @@
         <ImageView
             android:id="@+id/scheduleItemImage"
             android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
+            android:layout_gravity="center"
             android:src="@drawable/img1" />
 
         <LinearLayout
@@ -55,6 +56,25 @@
                 android:drawableStart="@drawable/subtract"
                 android:drawablePadding="8dp"
                 android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/scheduleItemRoomType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/grey"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/scheduleItemPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="8dp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

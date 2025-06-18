@@ -13,7 +13,11 @@ public class HotelRoom {
 
     @SerializedName("hostel_id")
     private int hostelId;
+    private Hotel Hotels;
 
+    public Hotel getHotel() {
+        return Hotels;
+    }
     public String getRoom_type() {
         return room_type;
     }
@@ -29,4 +33,5 @@ public class HotelRoom {
     public int getHostelId() {
         return hostelId;
     }
+
 }
