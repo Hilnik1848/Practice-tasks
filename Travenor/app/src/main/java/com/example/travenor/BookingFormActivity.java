@@ -50,7 +50,7 @@ public class BookingFormActivity extends AppCompatActivity {
     private TextView textViewStartDate, textViewEndDate, totalPriceText, guestCountText;
     private long startDateMillis = 0, endDateMillis = 0;
     private String hotelId, hotelName;
-
+    private boolean isSelectingStartDate = true;
     private static final String SUPABASE_URL = "https://mmbdesfnabtcbpjwcwde.supabase.co/rest/v1/";
     private static final String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYmRlc2ZuYWJ0Y2Jwandjd2RlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5NTg4MDMsImV4cCI6MjA2NDUzNDgwM30.zU9xsd7HMVuLi6OkiKTaB723ek2YNomMgrqnKKvSvQk";
 
@@ -93,6 +93,21 @@ public class BookingFormActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomTypeSpinner.setAdapter(adapter);
+
+
+        textViewStartDate.setOnClickListener(v -> {
+            isSelectingStartDate = true;
+            Toast.makeText(this, "Выберите дату заезда", Toast.LENGTH_SHORT).show();
+        });
+
+        textViewEndDate.setOnClickListener(v -> {
+            if (startDateMillis == 0) {
+                Toast.makeText(this, "Сначала выберите дату заезда", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            isSelectingStartDate = false;
+            Toast.makeText(this, "Выберите дату выезда", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void setupRoomSpinner() {
@@ -118,20 +133,33 @@ public class BookingFormActivity extends AppCompatActivity {
             calendar.set(year, month, dayOfMonth);
             long selectedDate = calendar.getTimeInMillis();
 
-            if (startDateMillis == 0 || (endDateMillis != 0 && selectedDate < startDateMillis)) {
+            if (selectedDate < System.currentTimeMillis()) {
+                Toast.makeText(BookingFormActivity.this,
+                        "Нельзя выбрать прошедшую дату",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (isSelectingStartDate) {
                 startDateMillis = selectedDate;
                 textViewStartDate.setText(formatDate(startDateMillis));
                 endDateMillis = 0;
                 textViewEndDate.setText("--");
-            } else if (selectedDate > startDateMillis) {
-                endDateMillis = selectedDate;
-                textViewEndDate.setText(formatDate(endDateMillis));
-                updateTotalPrice();
             } else {
-                Toast.makeText(this, "Дата выезда должна быть после даты заезда", Toast.LENGTH_SHORT).show();
+                if (selectedDate > startDateMillis) {
+                    endDateMillis = selectedDate;
+                    textViewEndDate.setText(formatDate(endDateMillis));
+                    updateTotalPrice();
+                } else {
+                    Toast.makeText(BookingFormActivity.this,
+                            "Дата выезда должна быть после даты заезда",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
+
 
     private void setupGuestCounter() {
         ImageButton btnMinus = findViewById(R.id.btnMinusGuest);

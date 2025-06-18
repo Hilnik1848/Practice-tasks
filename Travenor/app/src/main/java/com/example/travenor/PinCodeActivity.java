@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,13 +23,16 @@ public class PinCodeActivity extends AppCompatActivity {
     private TextView pinDisplay;
     private StringBuilder pinBuilder = new StringBuilder();
     private SessionManager sessionManager;
-
+    private ProgressBar progressBar;
+    private TextView loadingText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DataBinding.init(getApplicationContext());
         setContentView(R.layout.activity_pin_code);
 
+        progressBar = findViewById(R.id.progressBar);
+        loadingText = findViewById(R.id.loadingText);
         pinDisplay = findViewById(R.id.pinDisplay);
         sessionManager = new SessionManager(this);
 
@@ -89,6 +93,9 @@ public class PinCodeActivity extends AppCompatActivity {
         String savedPin = sessionManager.getPin();
 
         if (savedPin != null && savedPin.equals(enteredPin)) {
+            progressBar.setVisibility(View.VISIBLE);
+            loadingText.setVisibility(View.VISIBLE);
+
             showSuccessAnimationAndProceed();
         } else {
             showErrorAnimation(() -> {

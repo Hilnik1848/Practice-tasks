@@ -35,6 +35,21 @@
         android:textSize="50sp"
         android:layout_marginBottom="64dp"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Проверка PIN..."
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:visibility="gone"/>
+
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

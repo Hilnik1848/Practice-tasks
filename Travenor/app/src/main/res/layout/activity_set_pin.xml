@@ -7,7 +7,6 @@
     android:gravity="center"
     android:padding="16dp">
 
-    <!-- Кнопка "Назад" -->
     <ImageButton
         android:id="@+id/forgotBack"
         android:layout_width="wrap_content"
@@ -20,7 +19,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"/>
 
-    <!-- Заголовок -->
     <TextView
         android:id="@+id/pinTitle"
         android:layout_width="wrap_content"
@@ -34,7 +32,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Описание -->
     <TextView
         android:id="@+id/Title"
         android:layout_width="wrap_content"
@@ -48,7 +45,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="11dp"/>
 
-    <!-- Отображение пин-кода -->
     <TextView
         android:id="@+id/pinDisplay"
         android:layout_width="wrap_content"
@@ -60,7 +56,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp"/>
 
-    <!-- Клавиатура -->
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
