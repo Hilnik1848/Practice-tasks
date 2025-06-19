@@ -41,6 +41,8 @@ public class SupabaseClient {
     public static String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYmRlc2ZuYWJ0Y2Jwandjd2RlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5NTg4MDMsImV4cCI6MjA2NDUzNDgwM30.zU9xsd7HMVuLi6OkiKTaB723ek2YNomMgrqnKKvSvQk";
 
     OkHttpClient client = new OkHttpClient();
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
+
     private static final MediaType JSON = MediaType.get("application/json");
     public void registr(LoginRequest loginRequest, final SBC_Callback callback){
         MediaType mediaType = MediaType.parse("application/json");
@@ -660,32 +662,6 @@ public class SupabaseClient {
         });
     }
 
-    public void fetchHotelById(String hotelId, SBC_Callback callback) {
-        String url = DOMAIN_NAME + REST_PATH + "Hotels?id=eq." + hotelId;
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("apikey", API_KEY)
-                .addHeader("Authorization", DataBinding.getBearerToken())
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                callback.onFailure(e);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onResponse(response.body().string());
-                } else {
-                    callback.onFailure(new IOException("Не удалось загрузить отель"));
-                }
-            }
-        });
-    }
-
 
     public void fetchBookingsForUser(String userId, SBC_Callback callback) {
         Request request = new Request.Builder()
@@ -712,10 +688,167 @@ public class SupabaseClient {
         });
     }
 
+    public void fetchUserChats(String userId, final SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "chats?user_id=eq." + userId +
+                "&select=*,managers(*,profiles(*)),profiles!chats_user_id_fkey(*)";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Failed to fetch chats"));
+                }
+            }
+        });
+    }
+
+    public void fetchManagerId(String userId, final SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "managers?user_id=eq." + userId + "&select=id";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Ошибка при получении manager_id"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+        });
+    }
+    public void fetchManagerChats(int managerId, final SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "chats?manager_id=eq." + managerId +
+                "&select=*,user:profiles(*),manager:managers(*,profile:profiles(*))";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Ошибка при получении чатов"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+        });
+    }
+
+    public void checkIfManager(String userId, final SBC_Callback callback) {
+        String url = DOMAIN_NAME + REST_PATH + "managers?user_id=eq." + userId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", API_KEY)
+                .addHeader("Authorization", DataBinding.getBearerToken())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResponse(response.body().string());
+                } else {
+                    callback.onFailure(new IOException("Failed to check manager status"));
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+        });
+    }
+
+    public void get(@NonNull String url, @NonNull SBC_Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .header("apikey", API_KEY)
+                .header("Authorization", "Bearer " + API_KEY)
+                .build();
+
+        executeRequest(request, callback);
+    }
+
+    public void post(@NonNull String url, @NonNull String jsonBody, @NonNull SBC_Callback callback) {
+        RequestBody body = RequestBody.create(JSON, jsonBody);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("apikey", API_KEY)
+                .header("Authorization", "Bearer " + API_KEY)
+                .header("Content-Type", "application/json")
+                .header("Prefer", "return=representation")
+                .build();
+
+        executeRequest(request, callback);
+    }
+
+    private void executeRequest(@NonNull Request request, @NonNull SBC_Callback callback) {
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                runOnMainThread(() -> callback.onFailure(e));
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    runOnMainThread(() -> callback.onResponse(responseBody));
+                } else {
+                    String errorBody = response.body() != null ? response.body().string() : "Unknown error";
+                    IOException exception = new IOException("HTTP error: " + response.code() + ", " + errorBody);
+                    runOnMainThread(() -> callback.onFailure(exception));
+                }
+            }
+        });
+    }
+    private void runOnMainThread(Runnable runnable) {
+        mainHandler.post(runnable);
+    }
     public interface FavoriteCallback {
         void onResult(boolean isFavorite);
         void onError(Exception e);
     }
+
+
 
     public interface SimpleCallback {
         void onSuccess();

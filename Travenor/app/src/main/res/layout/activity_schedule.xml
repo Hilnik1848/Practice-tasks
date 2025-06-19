@@ -9,7 +9,7 @@
         android:id="@+id/headerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Schedule"
+        android:text="@string/my_schedule_title"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:textStyle="bold"

@@ -23,6 +23,15 @@
             android:padding="8dp"
             android:layout_marginRight="16dp" />
 
+        <TextView
+            android:id="@+id/conversationHotelInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/grey"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,30 +47,8 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/conversationLastMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="Hello"
-                android:textColor="@color/grey" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="end"
-            android:layout_marginLeft="16dp">
-
-
-            <TextView
-                android:id="@+id/conversationTimestamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="18:00"
-                android:textColor="@color/grey" />
-        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

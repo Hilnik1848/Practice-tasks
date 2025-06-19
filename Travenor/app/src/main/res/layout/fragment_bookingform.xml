@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:layout_marginTop="30dp">
+
     <ImageButton
         android:id="@+id/BackBTN"
         android:layout_width="wrap_content"
@@ -14,6 +15,7 @@
         android:src="@drawable/arrow"
         android:background="@color/white"
         android:layout_marginTop="10dp"
+        android:contentDescription="@string/cd_back_button2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -22,7 +24,7 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Booking Form"
+        android:text="@string/booking_form_title"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -33,22 +35,22 @@
         android:id="@+id/selectDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Date"
+        android:text="@string/select_date_label"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/titleTextView"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
+
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/selectDateLabel"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:background="@color/l_blue"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/selectDateLabel"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TableLayout
         android:id="@+id/datesContainer"
@@ -56,6 +58,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/calendarView">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_selection_hint_below_calendar"
+            android:textSize="14sp"
+            android:textColor="@color/grey"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/selectDateLabel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <TableRow>
             <TextView
                 android:id="@+id/checkInText"
@@ -63,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textStyle="bold"
-                android:text="Check In"
+                android:text="@string/check_in"
                 android:textAlignment="center"/>
 
             <TextView
@@ -72,25 +87,26 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textStyle="bold"
-                android:text="Check Out"
+                android:text="@string/check_out"
                 android:textAlignment="center"/>
         </TableRow>
+
         <TableRow>
             <TextView
                 android:id="@+id/textViewStartDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Apr 17"
-                android:textSize="18dp"
+                android:text="@string/default_checkin_date"
+                android:textSize="18sp"
                 android:textAlignment="center"
                 android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/textViewEndDate"
                 android:layout_width="0dp"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
-                android:text="Apr 20"
+                android:text="@string/default_checkout_date"
                 android:textAlignment="center"
                 android:layout_weight="1"/>
         </TableRow>
@@ -100,19 +116,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:layout_margin="10dp"
                 android:textStyle="bold"
-                android:text="Guest"/>
+                android:text="@string/guests_label"/>
         </TableRow>
-        <TableRow>
 
+        <TableRow>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 android:gravity="center">
+
                 <ImageButton
                     android:id="@+id/btnMinusGuest"
                     android:layout_width="38dp"
@@ -121,6 +138,7 @@
                     android:backgroundTint="@color/blue"
                     android:layout_gravity="center"
                     android:background="@drawable/rounded_button" />
+
                 <TextView
                     android:id="@+id/guestCountText"
                     android:layout_width="wrap_content"
@@ -128,6 +146,7 @@
                     android:text="1"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"/>
+
                 <ImageButton
                     android:id="@+id/btnPlusGuest"
                     android:layout_width="38dp"
@@ -138,9 +157,9 @@
                     android:background="@drawable/rounded_button"/>
             </LinearLayout>
         </TableRow>
+
         <TableRow
             android:layout_marginTop="10dp">
-
             <LinearLayout
                 android:layout_width="357dp"
                 android:layout_height="wrap_content"
@@ -151,8 +170,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:text="Room type"
-                    android:textSize="16dp"
+                    android:text="@string/room_type_label"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -164,7 +183,6 @@
                     android:layout_weight="1"
                     android:gravity="center" />
             </LinearLayout>
-
         </TableRow>
     </TableLayout>
 
@@ -172,10 +190,10 @@
         android:id="@+id/totalPriceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total: NGN 140,000"
+        android:text="@string/total_price"
         android:textSize="18sp"
-        android:layout_marginBottom="10dp"
         android:textStyle="bold"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -183,7 +201,7 @@
         android:id="@+id/continueButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Continue"
+        android:text="@string/continue_button"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:backgroundTint="@color/blue"
         android:textColor="@color/white"

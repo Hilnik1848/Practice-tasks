@@ -38,12 +38,11 @@
                     android:src="@drawable/img1" />
             </androidx.cardview.widget.CardView>
 
-
             <TextView
                 android:id="@+id/usernameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Leonardo"
+                android:text="@string/home_username"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -68,7 +67,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Explore the Beautiful world!"
+            android:text="@string/home_explore_world"
             android:textSize="32sp"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -78,7 +77,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Best Destinations"
+            android:text="@string/home_best_destinations"
             android:textSize="14sp"
             android:textColor="@color/grey"
             android:layout_marginTop="12dp" />

@@ -11,13 +11,13 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.travenor.Models.BookingRequest;
+import com.example.travenor.Models.Chat;
 import com.example.travenor.Models.HotelRoom;
+import com.example.travenor.Models.Manager;
+import com.example.travenor.Models.ProfileUpdate;
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,7 +93,6 @@ public class BookingFormActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomTypeSpinner.setAdapter(adapter);
 
-
         textViewStartDate.setOnClickListener(v -> {
             isSelectingStartDate = true;
             Toast.makeText(this, "Выберите дату заезда", Toast.LENGTH_SHORT).show();
@@ -158,8 +156,6 @@ public class BookingFormActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void setupGuestCounter() {
         ImageButton btnMinus = findViewById(R.id.btnMinusGuest);
@@ -241,10 +237,6 @@ public class BookingFormActivity extends AppCompatActivity {
     }
 
     private void sendBookingRequest(BookingRequest booking) {
-        Gson gson = new Gson();
-        String jsonBody = gson.toJson(booking);
-        Log.d("API_REQUEST", "Sending booking: " + jsonBody);
-
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     okhttp3.Request original = chain.request();
@@ -255,7 +247,6 @@ public class BookingFormActivity extends AppCompatActivity {
                             .header("Prefer", "return=representation")
                             .method(original.method(), original.body())
                             .build();
-                    Log.d("API_REQUEST", "Headers: " + request.headers());
                     return chain.proceed(request);
                 })
                 .build();
@@ -273,12 +264,12 @@ public class BookingFormActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
+                    getManagerAndCreateChat(booking.getUser_id(), booking.getHotel_id());
                     Toast.makeText(BookingFormActivity.this, "Бронирование успешно создано!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     try {
                         String errorBody = response.errorBody() != null ? response.errorBody().string() : "empty";
-                        Log.e("API_ERROR", "Error: " + response.code() + " - " + errorBody);
                         Toast.makeText(BookingFormActivity.this,
                                 "Ошибка создания бронирования: " + errorBody,
                                 Toast.LENGTH_LONG).show();
@@ -293,7 +284,157 @@ public class BookingFormActivity extends AppCompatActivity {
                 Toast.makeText(BookingFormActivity.this,
                         "Ошибка сети: " + t.getMessage(),
                         Toast.LENGTH_LONG).show();
-                Log.e("API_ERROR", "Network error", t);
+            }
+        });
+    }
+
+    private void getManagerAndCreateChat(String userId, int hotelId) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    okhttp3.Request original = chain.request();
+                    okhttp3.Request request = original.newBuilder()
+                            .header("apikey", API_KEY)
+                            .header("Authorization", "Bearer " + API_KEY)
+                            .method(original.method(), original.body())
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SUPABASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        SupabaseApiService apiService = retrofit.create(SupabaseApiService.class);
+        Call<List<Manager>> call = apiService.getManagerByHotelId(
+                "eq." + hotelId,
+                "id,user_id,hotel_id"
+        );
+
+        call.enqueue(new Callback<List<Manager>>() {
+            @Override
+            public void onResponse(Call<List<Manager>> call, Response<List<Manager>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    Manager manager = response.body().get(0);
+                    checkAndCreateChat(userId, manager.getId(), hotelId);
+                } else {
+                    Log.e("API_ERROR", "Не удалось найти менеджера для отеля: " + hotelId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Manager>> call, Throwable t) {
+                Log.e("API_ERROR", "Ошибка сети при поиске менеджера", t);
+            }
+        });
+    }
+
+    private void checkAndCreateChat(String userId, int managerId, int hotelId) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    okhttp3.Request original = chain.request();
+                    okhttp3.Request request = original.newBuilder()
+                            .header("apikey", API_KEY)
+                            .header("Authorization", "Bearer " + API_KEY)
+                            .method(original.method(), original.body())
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SUPABASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        SupabaseApiService apiService = retrofit.create(SupabaseApiService.class);
+
+        Call<List<Chat>> call = apiService.checkExistingChat(
+                "eq." + userId,
+                "eq." + managerId,
+                "eq." + hotelId,
+                "id"
+        );
+
+        call.enqueue(new Callback<List<Chat>>() {
+            @Override
+            public void onResponse(Call<List<Chat>> call, Response<List<Chat>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() == null || response.body().isEmpty()) {
+                        createNewChat(userId, managerId, hotelId);
+                    } else {
+                        Log.d("CHAT", "Чат уже существует: " + new Gson().toJson(response.body()));
+                    }
+                } else {
+                    try {
+                        String error = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error";
+                        Log.e("API_ERROR", "Ошибка проверки чата: " + error);
+                    } catch (IOException e) {
+                        Log.e("API_ERROR", "Ошибка чтения ошибки", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Chat>> call, Throwable t) {
+                Log.e("API_ERROR", "Ошибка сети: " + t.getMessage());
+            }
+        });
+    }
+
+    private void createNewChat(String userId, int managerId, int hotelId) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    okhttp3.Request original = chain.request();
+                    okhttp3.Request request = original.newBuilder()
+                            .header("apikey", API_KEY)
+                            .header("Authorization", "Bearer " + API_KEY)
+                            .header("Content-Type", "application/json")
+                            .header("Prefer", "return=representation")
+                            .method(original.method(), original.body())
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SUPABASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Chat newChat = new Chat();
+        newChat.setUser_id(userId);
+        newChat.setManager_id(managerId);
+        newChat.setHotel_id(hotelId);
+
+        SupabaseApiService apiService = retrofit.create(SupabaseApiService.class);
+        Call<Chat> call = apiService.createChat(newChat);
+
+        call.enqueue(new Callback<Chat>() {
+            @Override
+            public void onResponse(Call<Chat> call, Response<Chat> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Chat createdChat = response.body();
+                    Log.d("CHAT", "Новый чат создан: " + new Gson().toJson(createdChat));
+                } else {
+                    try {
+                        String error = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error";
+                        Log.e("API_ERROR", "Ошибка создания чата: " + error);
+                    } catch (IOException e) {
+                        Log.e("API_ERROR", "Ошибка чтения ошибки", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Chat> call, Throwable t) {
+                Log.e("API_ERROR", "Ошибка сети при создании чата: " + t.getMessage());
             }
         });
     }
@@ -302,7 +443,8 @@ public class BookingFormActivity extends AppCompatActivity {
         @Headers({
                 "apikey: " + API_KEY,
                 "Authorization: Bearer " + API_KEY,
-                "Content-Type: application/json"
+                "Content-Type: application/json",
+                "Prefer: return=representation"
         })
         @POST("bookings")
         Call<Void> createBooking(@Body BookingRequest request);
@@ -316,11 +458,78 @@ public class BookingFormActivity extends AppCompatActivity {
                 @Query("hostel_id") String hostelId,
                 @Query("select") String select
         );
+
+        @Headers({
+                "apikey: " + API_KEY,
+                "Authorization: Bearer " + API_KEY
+        })
+        @GET("managers")
+        Call<List<Manager>> getManagerByHotelId(
+                @Query("hotel_id") String hotelId,
+                @Query("select") String select
+        );
+
+        @Headers({
+                "apikey: " + API_KEY,
+                "Authorization: Bearer "
+        })
+        @GET("chats")
+        Call<List<Chat>> checkExistingChat(
+                @Query("user_id") String userId,
+                @Query("manager_id") String managerId,
+                @Query("hotel_id") String hotelId,
+                @Query("select") String select
+        );
+
+        @Headers({
+                "apikey: " + API_KEY,
+                "Authorization: Bearer " + API_KEY,
+                "Content-Type: application/json",
+                "Prefer: return=representation"
+        })
+        @POST("chats")
+        Call<Chat> createChat(@Body Chat chat);
+
+        @Headers({
+                "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYmRlc2ZuYWJ0Y2Jwandjd2RlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5NTg4MDMsImV4cCI6MjA2NDUzNDgwM30.zU9xsd7HMVuLi6OkiKTaB723ek2YNomMgrqnKKvSvQk",
+                "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYmRlc2ZuYWJ0Y2Jwandjd2RlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5NTg4MDMsImV4cCI6MjA2NDUzNDgwM30.zU9xsd7HMVuLi6OkiKTaB723ek2YNomMgrqnKKvSvQk"
+        })
+        @GET("chats")
+        Call<List<Chat>> getAllChats(@Query("select") String select);
+
+        @GET("managers")
+        Call<List<Manager>> getManagerById(@Query("id") String managerId);
+
+        @GET("profiles")
+        Call<ProfileUpdate> getProfileByUserId(@Query("id") String userId);
+
+        @Headers({
+                "apikey: " + API_KEY,
+                "Authorization: Bearer " + API_KEY
+        })
+        @GET("chats")
+        Call<List<Chat>> getAllChats(
+                @Query("user_id") String userId,
+                @Query("select") String select
+        );
     }
 
     private void loadRooms(String hotelId) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    okhttp3.Request original = chain.request();
+                    okhttp3.Request request = original.newBuilder()
+                            .header("apikey", API_KEY)
+                            .header("Authorization", "Bearer " + API_KEY)
+                            .method(original.method(), original.body())
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SUPABASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -339,8 +548,7 @@ public class BookingFormActivity extends AppCompatActivity {
 
                     List<String> roomTypes = new ArrayList<>();
                     for (HotelRoom room : roomList) {
-                        String roomType = room.getRoom_type();
-                        roomTypes.add(roomType != null ? roomType : "Неизвестный тип");
+                        roomTypes.add(room.getRoom_type());
                     }
 
                     adapter.clear();
@@ -360,5 +568,4 @@ public class BookingFormActivity extends AppCompatActivity {
             }
         });
     }
-
 }

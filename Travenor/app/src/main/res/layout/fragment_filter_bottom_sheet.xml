@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:text="Фильтр"
+        android:text="@string/filter_title"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -22,13 +22,13 @@
         android:textSize="30dp"
         android:padding="5dp"
         android:background="@drawable/edittext_border"
-        android:hint="Страна"/>
+        android:hint="@string/hint_country"/>
 
     <TextView
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Star Rating"
+        android:text="@string/star_rating"
         android:textSize="18sp"
         android:layout_marginTop="15dp" />
 
@@ -47,7 +47,7 @@
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Faciities"
+        android:text="@string/facilities"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
@@ -60,7 +60,7 @@
         android:padding="5dp"
         android:background="@drawable/edittext_border"
         android:layout_height="wrap_content"
-        android:hint="Удобства (через запятую)"
+        android:hint="@string/hint_amenities"
         android:inputType="text"/>
 
     <LinearLayout
@@ -75,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Применить"
+            android:text="@string/btn_apply"
             android:backgroundTint="@color/blue"
             android:layout_marginEnd="4dp"
             android:textColor="@color/white"
@@ -86,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Сбросить"
+            android:text="@string/btn_reset"
             android:layout_marginEnd="4dp"
             android:textColor="@color/org"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>

@@ -40,6 +40,8 @@ dependencies {
     implementation(libs.car.ui.lib)
     implementation(libs.firebase.perf)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.firebase.installations)
+    implementation(libs.firebase.installations)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

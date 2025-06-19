@@ -16,9 +16,10 @@
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:queryHint="Поиск отелей"
+            android:queryHint="@string/hint_search_hotels"
             android:iconifiedByDefault="false"
             android:focusable="true"
+            android:background="@drawable/edit_text_background"
             android:focusableInTouchMode="true"/>
 
         <ImageButton
@@ -27,7 +28,7 @@
             android:layout_height="48dp"
             android:src="@drawable/vector"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Фильтр"/>
+            android:contentDescription="@string/cd_filter_button"/>
     </LinearLayout>
 
     <TextView
@@ -35,7 +36,7 @@
         android:id="@+id/headerTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Найдите отель"
+        android:text="@string/title_find_hotel"
         android:textSize="24sp"
         android:textStyle="bold"/>
 

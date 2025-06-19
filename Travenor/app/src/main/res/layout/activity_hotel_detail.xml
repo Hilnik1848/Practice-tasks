@@ -23,7 +23,7 @@
             android:layout_margin="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/arrow"
-            android:contentDescription="Назад" />
+            android:contentDescription="@string/cd_back_button" />
 
     </FrameLayout>
 
@@ -89,7 +89,7 @@
         android:id="@+id/btn_book_hotel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Забронировать"
+        android:text="@string/book_hotel_button"
         android:textAllCaps="false"
         android:layout_margin="16dp"
         android:backgroundTint="@color/blue"
